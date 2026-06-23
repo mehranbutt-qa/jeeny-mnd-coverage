@@ -11,11 +11,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is logged in and eligible for destination filter.",
     "steps": "Navigate to Home screen. 2. Observe the destination filter toggle. 3. Enable and disable the toggle.",
     "expected": "Destination filter toggle should be visible and functional. Toggling should enable or disable destination filter accordingly.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15726,
@@ -29,11 +30,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is on destination filter main screen with search option available.",
     "steps": "Search for a location or select from map/recent addresses. 2. Set the location as favourite with a custom title. 3. Save the favourite.",
     "expected": "Address should be saved as favourite with the entered title. It should appear in favourite list for future selection.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15727,
@@ -47,11 +49,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is logged in and destination filter toggle is enabled.",
     "steps": "Keep the app on any of the destination filter screens (main, search, favourite, recent). 2. Observe for incoming ride offers.",
     "expected": "Driver should receive rides normally while on any of the destination filter screens.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15728,
@@ -65,11 +68,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is on destination filter main screen and map is accessible.",
     "steps": "Open map option. 2. Select a desired location using map pin. 3. Set it as destination filter.",
     "expected": "Destination filter should be set correctly using map pin. Selected address should match displayed location.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15729,
@@ -83,11 +87,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is on destination filter main screen with search functionality.",
     "steps": "Open search option. 2. Search for a desired location. 3. Select and set it as destination filter.",
     "expected": "Destination filter should be set correctly using search. Selected address should match searched location.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15730,
@@ -101,11 +106,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver has saved favourite/recent addresses and is on destination filter screen.",
     "steps": "Open favourite or recent addresses list. 2. Select a location. 3. Set it as destination filter.",
     "expected": "Destination filter should be set correctly using favourite or recent address. Selected address should match chosen location.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15731,
@@ -119,11 +125,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver has destination filter enabled.",
     "steps": "Navigate to Home screen. 2. Turn off the destination filter toggle. 3. Observe the app behavior.",
     "expected": "Destination filter should be disabled. Driver should not receive rides filtered by previous destination.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15732,
@@ -137,11 +144,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver has destination filter enabled and set.",
     "steps": "Keep the app online. 2. Observe incoming rides.",
     "expected": "Driver should only receive rides near the set destination. Rides outside the destination filter should not appear.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15733,
@@ -155,11 +163,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver has active destination filter and receives ride offer.",
     "steps": "Accept ride with destination filter active. 2. Board the passenger. 3. Observe the destination filter usage count notification.",
     "expected": "Destination filter usage count should decrease by 1 after boarding. Notification should appear reflecting usage.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15734,
@@ -173,11 +182,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver is on destination filter main screen and has limited destination filter usage per day.",
     "steps": "Use destination filter for rides until daily limit is reached. 2. Observe count decrement on destination filter main screen.",
     "expected": "Destination filter count should decrease with every ride and reach 0 after daily limit. Driver cannot set new destination after limit is reached.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 15735,
@@ -191,11 +201,12 @@
     "section": "Destination Filter",
     "folder": "Driver App > Home Screen > Destination Filter",
     "section_id": 1141,
+    "testing_layer": "System / E2E",
+    "feature": "Destination Filter",
     "preconditions": "Driver has reached daily destination filter usage limit and is on Home screen.",
     "steps": "Press destination filter toggle on Home screen. 2. Observe prompt behavior.",
     "expected": "A prompt should appear stating 'You can't set more destinations today'. Destination filter should not be enabled until next day/reset.",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 7045,
@@ -209,11 +220,12 @@
     "section": "Forward Dispatch Rides",
     "folder": "Driver App > Ride Flows > Forward Dispatch Rides",
     "section_id": 694,
+    "testing_layer": "System / E2E",
+    "feature": "Forward Dispatch Rides",
     "preconditions": "",
     "steps": "driver user in ride about tp approach destination create a forward dispatch ride that starts from the first distenation driver should recieve the offer",
     "expected": "",
-    "refs": "",
-    "testing_layer": "System / E2E"
+    "refs": ""
   },
   {
     "id": 87068,
@@ -227,10 +239,11 @@
     "section": "Forward Dispatch Rides",
     "folder": "Driver App > Ride Flows > Forward Dispatch Rides",
     "section_id": 694,
+    "testing_layer": "UI / Mobile",
+    "feature": "Forward Dispatch Rides",
     "preconditions": "",
     "steps": "Scenario: Driver on an active trip sees the next-leg ETA on a Forward Dispatch offer instead of the cumulative ETA Given a driver is on an active trip with a passenger And the driver receives a Forward Dispatch offer for a new ride When the offer card is displayed to the driver Then the displayed ETA should reflect only the travel time from the driver's drop-off location to the next pickup location And the displayed ETA should not include the remaining time of the driver's current trip And the matched passenger on the new ride should see the full cumulative wait time, including the driver's remaining current-trip time And the backend logs and reports should record the absolute cumulative ETA for that ride",
     "expected": "",
-    "refs": "",
-    "testing_layer": "UI / Mobile"
+    "refs": ""
   }
 ]
