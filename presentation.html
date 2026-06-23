@@ -995,7 +995,9 @@ async function startRefresh(){
     } catch(e){ /* non-fatal — fallback to SECTION_MAP */ }
 
     setProgress(92,`Filtering M&D cases (domain=${MND_DOMAIN_ID})…`);
-    const mndRaw = allCases.filter(c=>c.custom_case_domain===MND_DOMAIN_ID&&!c.is_deleted);
+    // TestRail can return custom field values as strings in some responses.
+    // Normalize to number so the domain filter does not silently exclude all cases.
+    const mndRaw = allCases.filter(c=>Number(c.custom_case_domain)===MND_DOMAIN_ID && !c.is_deleted);
 
     // Deduplicate
     const seen=new Set();
