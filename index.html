@@ -413,6 +413,29 @@ function buildModuleNav(){
   }).join('');
 }
 
+const LAYER_BADGE_CONFIG = {
+  'API / Backend':  { label:'Backend',    bg:'#eff6ff', color:'#1d4ed8', border:'#93c5fd', icon:'🔧' },
+  'System / E2E':   { label:'E2E',        bg:'#f0fdf4', color:'#059669', border:'#6ee7b7', icon:'🔄' },
+  'Integration':    { label:'Integration',bg:'#faf5ff', color:'#7c3aed', border:'#c4b5fd', icon:'🔗' },
+  'UI / Mobile':    { label:'Mobile',     bg:'#fff7ed', color:'#ea580c', border:'#fdba74', icon:'📱' },
+  'Performance':    { label:'Performance',bg:'#fef2f2', color:'#dc2626', border:'#fca5a5', icon:'⚡' },
+};
+
+function getLayerBadge(cases){
+  if(!cases.length) return '';
+  // Count layers
+  const counts = {};
+  cases.forEach(c=>{ counts[c.testing_layer]=(counts[c.testing_layer]||0)+1; });
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const [topLayer, topCount] = sorted[0];
+  const pct = Math.round(topCount/cases.length*100);
+  // Only show badge if dominant layer is >= 80% of cases
+  if(pct < 80) return '';
+  const cfg = LAYER_BADGE_CONFIG[topLayer];
+  if(!cfg) return '';
+  return `<span style="background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.border};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.03em;white-space:nowrap">${cfg.icon} ${cfg.label}</span>`;
+}
+
 function buildOverview(){
   const el=document.getElementById('overview-content');
   let html=`<div class="stat-row">
@@ -433,10 +456,11 @@ function buildOverview(){
       <div class="mc-header"><span class="mc-emoji">${meta.emoji}</span><span class="mc-name">${m}</span></div>
       <div class="mc-desc">${meta.desc}</div>
       <div class="tags">${(meta.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      <div class="mc-stats">
+      <div class="mc-stats" style="justify-content:space-between;align-items:center">
         <span>🔥 Smoke: <strong>${ms}</strong></span>
         <span>🔁 Regression: <strong>${mr}</strong></span>
         <span>📋 Total: <strong>${cases.length}</strong></span>
+        ${getLayerBadge(cases)}
       </div>
       <div class="tier-bar">
         ${mt0?`<div class="tier-seg t0" style="flex:${mt0}" title="Tier 0: ${mt0}"></div>`:''}
