@@ -326,8 +326,12 @@ select.filter-select:focus{border-color:#1d4ed8}
     <p style="font-size:13px;color:#64748b;margin-bottom:20px">Enter your TestRail credentials to fetch the latest M&amp;D cases live.</p>
     <div style="display:flex;flex-direction:column;gap:10px">
       <div>
-        <label style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">TestRail URL</label>
-        <input id="rf-url" type="text" value="https://jeeny1.testrail.io" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none">
+        <label style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">Proxy URL <span style="font-weight:400;color:#94a3b8;text-transform:none;letter-spacing:0">— local or Cloudflare Worker</span></label>
+        <div style="display:flex;gap:6px">
+          <input id="rf-proxy" type="text" placeholder="http://localhost:3131 or https://....workers.dev" style="flex:1;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:12px;font-family:monospace;outline:none">
+          <button onclick="checkProxyAndUpdate()" style="background:#f1f5f9;border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:12px;cursor:pointer;font-family:inherit;color:#475569;white-space:nowrap">Test</button>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:4px">💡 For access from anywhere: deploy <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px">cloudflare-worker.js</code> free at <a href="https://workers.cloudflare.com" target="_blank" style="color:#1d4ed8">workers.cloudflare.com</a> and paste the URL here.</div>
       </div>
       <div>
         <label style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">Email</label>
@@ -338,7 +342,7 @@ select.filter-select:focus{border-color:#1d4ed8}
         <input id="rf-key" type="password" placeholder="Your TestRail API key" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none">
       </div>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;cursor:pointer;margin-top:2px">
-        <input type="checkbox" id="rf-save" style="width:14px;height:14px"> Save credentials in browser (localStorage)
+        <input type="checkbox" id="rf-save" style="width:14px;height:14px"> Save credentials &amp; proxy URL in browser
       </label>
     </div>
     <div id="rf-progress" style="display:none;margin-top:16px">
@@ -742,6 +746,7 @@ function renderLayerTable(){
 
 // ── TESTRAIL REFRESH ──────────────────────────────────────────────────────────
 const CREDS_KEY = 'mnd-testrail-creds';
+let PROXY_URL = localStorage.getItem('mnd-proxy-url') || 'http://localhost:3131';
 const MND_DOMAIN_ID = 3;
 const PROJECT_ID = 1;
 
@@ -892,15 +897,57 @@ function getSectionPathRuntime(sid){
   return parts.length ? parts : [`Section ${sid}`];
 }
 
-function openRefreshModal(){
+async function checkProxy(url){
+  try{
+    const r=await fetch((url||PROXY_URL)+'/ping',{signal:AbortSignal.timeout(3000)});
+    const j=await r.json();
+    return j.ok===true;
+  }catch(e){return false;}
+}
+
+function setBannerState(running){
+  const b=document.getElementById('rf-proxy-banner');
+  if(running){
+    b.style.cssText='border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;line-height:1.6;background:#f0fdf4;border:1px solid #6ee7b7;color:#059669';
+    b.innerHTML='✅ <strong>Proxy is reachable</strong> — ready to fetch.';
+    document.getElementById('rf-start-btn').disabled=false;
+    document.getElementById('rf-start-btn').textContent='Fetch & Refresh';
+  }else{
+    b.style.cssText='border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;line-height:1.6;background:#fffbeb;border:1px solid #fcd34d;color:#92400e';
+    b.innerHTML=`⚠️ <strong>Proxy not reachable.</strong><br>
+      <strong>Option A — Local:</strong> Run <code style="background:#fef3c7;padding:1px 5px;border-radius:3px">node proxy.js</code>, use URL <code style="background:#fef3c7;padding:1px 5px;border-radius:3px">http://localhost:3131</code><br>
+      <strong>Option B — Anywhere (no laptop needed):</strong> Deploy <code style="background:#fef3c7;padding:1px 5px;border-radius:3px">cloudflare-worker.js</code> free at <a href="https://workers.cloudflare.com" target="_blank" style="color:#1d4ed8">workers.cloudflare.com</a> and paste your Worker URL above.`;
+    document.getElementById('rf-start-btn').disabled=true;
+    document.getElementById('rf-start-btn').textContent='Proxy not reachable';
+  }
+}
+
+async function checkProxyAndUpdate(){
+  const inputUrl=document.getElementById('rf-proxy').value.trim().replace(/\/$/,'');
+  if(!inputUrl)return;
+  PROXY_URL=inputUrl;
+  localStorage.setItem('mnd-proxy-url',PROXY_URL);
+  const b=document.getElementById('rf-proxy-banner');
+  b.style.cssText='border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b';
+  b.innerHTML='⏳ Testing proxy...';
+  setBannerState(await checkProxy(inputUrl));
+}
+
+async function openRefreshModal(){
   const saved=localStorage.getItem(CREDS_KEY);
-  if(saved){try{const c=JSON.parse(saved);document.getElementById('rf-url').value=c.url||'https://jeeny1.testrail.io';document.getElementById('rf-user').value=c.user||'';document.getElementById('rf-key').value=c.key||'';document.getElementById('rf-save').checked=true;}catch(e){}}
-  // modal inner reset
+  if(saved){try{const c=JSON.parse(saved);document.getElementById('rf-user').value=c.user||'';document.getElementById('rf-key').value=c.key||'';if(c.proxy){PROXY_URL=c.proxy;localStorage.setItem('mnd-proxy-url',c.proxy);}document.getElementById('rf-save').checked=true;}catch(e){}}
+  // Pre-fill proxy input
+  document.getElementById('rf-proxy').value=PROXY_URL;
   document.getElementById('rf-progress').style.display='none';
   document.getElementById('rf-error').style.display='none';
-  document.getElementById('rf-start-btn').disabled=false;
+  document.getElementById('rf-start-btn').disabled=true;
   document.getElementById('rf-start-btn').textContent='Fetch & Refresh';
   document.getElementById('refresh-modal').style.display='flex';
+  // Auto-check proxy
+  const b=document.getElementById('rf-proxy-banner');
+  b.style.cssText='border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b';
+  b.innerHTML='⏳ Checking proxy...';
+  setBannerState(await checkProxy());
 }
 function closeRefreshModal(){document.getElementById('refresh-modal').style.display='none';}
 
@@ -911,7 +958,9 @@ async function startRefresh(){
 
   if(!user||!key){document.getElementById('rf-error').style.display='';document.getElementById('rf-error').textContent='Please enter your email and API key.';return;}
 
-  if(save) localStorage.setItem(CREDS_KEY,JSON.stringify({user,key}));
+  const proxyInput=document.getElementById('rf-proxy').value.trim().replace(/\/$/,'');
+  if(proxyInput){PROXY_URL=proxyInput;localStorage.setItem('mnd-proxy-url',PROXY_URL);}
+  if(save) localStorage.setItem(CREDS_KEY,JSON.stringify({user,key,proxy:PROXY_URL}));
   else localStorage.removeItem(CREDS_KEY);
 
   document.getElementById('rf-error').style.display='none';
